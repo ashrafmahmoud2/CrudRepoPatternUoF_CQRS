@@ -1,4 +1,5 @@
-﻿using CrudRepoPatternUoF_CQRS.Core.IRepositories;
+﻿using CrudRepoPatternUoF_CQRS.Core;
+using CrudRepoPatternUoF_CQRS.Core.IRepositories;
 using CrudRepoPatternUoF_CQRS.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,19 +11,15 @@ namespace CrudRepoPatternUoF_CQRS.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class BooksController(IUnitOfWork unitOfWork) : ControllerBase
     {
-        private readonly IBaseRepository<Book> _baseRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public BooksController(IBaseRepository<Book> baseRepository)
-        {
-            _baseRepository = baseRepository;
-        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
-            var book = await _baseRepository.GetByIdAsync(id);
+            var book = await _unitOfWork.Books.GetByIdAsync(id);
             if (book == null) return NotFound();
             return Ok(book);
         }
@@ -30,14 +27,14 @@ namespace CrudRepoPatternUoF_CQRS.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
-            var books = await _baseRepository.GetAllAsync();
+            var books = await _unitOfWork.Books.GetAllAsync();
             return Ok(books);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateBook([FromBody] Book book)
         {
-            await _baseRepository.AddAsync(book);
+            await _unitOfWork.Books.AddAsync(book);
             return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
         }
 
@@ -46,22 +43,19 @@ namespace CrudRepoPatternUoF_CQRS.Api.Controllers
         {
             if (id != book.Id) return BadRequest();
 
-            _baseRepository.Update(book);
+            _unitOfWork.Books.Update(book);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBook(int id)
         {
-            var book = await _baseRepository.GetByIdAsync(id);
+            var book = await _unitOfWork.Books.GetByIdAsync(id);
             if (book == null) return NotFound();
 
-            _baseRepository.Delete(book);
+            _unitOfWork.Books.Delete(book);
             return NoContent();
         }
-
-      
-
-      
+  
     }
 }
