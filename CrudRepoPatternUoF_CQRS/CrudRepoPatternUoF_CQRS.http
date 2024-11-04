@@ -1,0 +1,6 @@
+@CrudRepoPatternUoF_CQRS_HostAddress = http://localhost:5229
+
+GET {{CrudRepoPatternUoF_CQRS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
