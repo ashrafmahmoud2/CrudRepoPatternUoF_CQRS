@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace CrudRepoPatternUoF_CQRS.Core;
 public interface IUnitOfWork : IDisposable
 {
-    IBaseRepository<Book> Books { get; } 
+    IBaseRepository<Book> Books { get; }
+    IPersonaRepository Persone { get; } 
     int Complete();
 }

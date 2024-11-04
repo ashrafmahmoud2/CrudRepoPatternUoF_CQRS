@@ -15,11 +15,15 @@ public class UnitOfWork : IUnitOfWork
 
     public IBaseRepository<Book> Books { get; private set; }
 
+    public IPersonaRepository Persone { get; private set; }
+
+
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
 
         Books = new BaseRepository<Book>(_context);
+        Persone = new PersonaRepository(_context);
     }
     public int Complete()
     {

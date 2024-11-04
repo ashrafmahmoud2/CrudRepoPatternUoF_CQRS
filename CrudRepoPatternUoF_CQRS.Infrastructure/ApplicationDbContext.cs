@@ -22,5 +22,6 @@ public class ApplicationDbContext : DbContext
 
 
     public DbSet<Book> Books { get; set; } 
+    public DbSet<Persone> Persone { get; set; } 
 
 }
